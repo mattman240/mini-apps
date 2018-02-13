@@ -10,8 +10,8 @@ let gameBoard = [
 
 //neater and more reusable code for getting the element
 let spots = {
-  0: document.getElementById("one"),
-  1: document.getElementById("two"),
+  0: document.getElementById('one'),
+  1: document.getElementById('two'),
   2: document.getElementById('three'),
   3: document.getElementById('four'),
   4: document.getElementById('five'),
@@ -24,12 +24,6 @@ let spots = {
 //click function
 const boardClick = (num) => {
   //check if the game has ended due to a tie
-  if (turnNumber > 7) {
-    //if yes alert
-    window.alert("Tie Game");
-    //then reload the page for next game
-    window.location.reload(true);
-  }
   //check if an even turn was played
   if(turnNumber % 2 === 0) {
     //set the spot clicked to X
@@ -45,18 +39,24 @@ const boardClick = (num) => {
     }
   } else {
     //set the clicked spot to O
-    spots[num].innerHTML = "O";
+    spots[num].innerHTML = 'O';
     //else pass to odd function
     playerO(num);
     //increse count
     turnNumber++;
   }
+  if (turnNumber > 8) {
+    //if yes alert
+    document.getElementById("title").innerHTML = "Tie Game";
+    //then reload the page for next game
+  setTimeout(() => window.location.reload(true), 3000);
+  }
 }
 //alerts who won the game
 const winner = who => {
-  window.alert(`Player ${who} Won`);
+  document.getElementById('title').innerHTML = `Player ${who} won the game!!!`
   //and refresh the page
-  window.location.reload(true);
+  setTimeout(() => window.location.reload(true), 3000)
 }
 //one click
 
@@ -76,7 +76,7 @@ spots[6].addEventListener('click', () => boardClick(6));
 //eight click
 spots[7].addEventListener('click', () => boardClick(7));
 //nine click
-spots[8].addEventListener("click", () => boardClick(8));
+spots[8].addEventListener('click', () => boardClick(8));
 
 //function to handle the first players clicks always X
 const playerX = num => {
@@ -89,12 +89,12 @@ const playerX = num => {
     //if yes then fix num for proper indexing
     num = num - 3;
     //if yes index middle row of gameBoard
-    gameBoard[1][num] = "X";
+    gameBoard[1][num] = 'X';
   } else {
     //adjust for bottom array
     num = num - 6;
     //if yes index bottom row of gameBoard
-    gameBoard[2][num] = "X";
+    gameBoard[2][num] = 'X';
   }
   //row check for winner
   gameBoard.forEach(line => {
@@ -107,16 +107,16 @@ const playerX = num => {
     //counter for right col
     let endTotal = 0;
     //check diagonal top left to bottom right
-    if(gameBoard[0][0] === "X" && gameBoard[1][1] === "X" && gameBoard[2][2] === "X") {
+    if(gameBoard[0][0] === 'X' && gameBoard[1][1] === 'X' && gameBoard[2][2] === 'X') {
       counter = 3;
     }
     //check diagonal top right to bottom left
-    if(gameBoard[0][2] === "X" && gameBoard[1][1] === "X" && gameBoard[2][0] === "X") {
+    if(gameBoard[0][2] === 'X' && gameBoard[1][1] === 'X' && gameBoard[2][0] === 'X') {
       counter = 3;
     }
     //checks rows
     line.forEach(piece => {
-      if (piece === "X") {
+      if (piece === 'X') {
         counter++;
       }
     });
@@ -171,30 +171,30 @@ const playerO = num => {
     //right col counter
     let endTotal = 0;
     //check diagonal top left to bottom right
-    if(gameBoard[0][0] === "O" && gameBoard[1][1] === "O" && gameBoard[2][2] === "O") {
+    if(gameBoard[0][0] === 'O' && gameBoard[1][1] === 'O' && gameBoard[2][2] === 'O') {
       counter = 3;
     }
     //check diagonal top right to bottom left
-    if(gameBoard[0][2] === "O" && gameBoard[1][1] === "O" && gameBoard[2][0] === "O") {
+    if(gameBoard[0][2] === 'O' && gameBoard[1][1] === 'O' && gameBoard[2][0] === 'O') {
       counter = 3;
     }
     //checks each row
     line.forEach(piece => {
-      if (piece === "O") {
+      if (piece === 'O') {
         counter++;
       }
     });
     gameBoard.forEach(col => {
       //checks left col
-      if (col[0] === "O") {
+      if (col[0] === 'O') {
         total += 1;
       }
       //checks middle col
-      if (col[1] === "O") {
+      if (col[1] === 'O') {
         middleTotal += 1;
       }
       //checks right col
-      if (col[2] === "O") {
+      if (col[2] === 'O') {
         endTotal += 1;
       }
     });
