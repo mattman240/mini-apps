@@ -21,44 +21,33 @@ let spots = {
   8: document.getElementById('nine')
 };
 
+let turnXorO = turnNumber => {
+  if(turnNumber % 2 === 0) {return 'X'} else {return 'O'};
+}
+
 //click function
 const boardClick = (num) => {
-  //check if the game has ended due to a tie
-  //check if an even turn was played
-  if(turnNumber % 2 === 0) {
-    //set the spot clicked to X
+  let players = turnXorO(turnNumber)
     if(spots[num].innerHTML === '') {
-      spots[num].innerHTML = 'X';
+      spots[num].innerHTML = players;
       //if yes pass to even function
-      playerX(num);
+      player(num, players);
       //increase play count
       turnNumber++;
       //else we know it is an O play
     } else {
       window.alert('can\'t place piece there')
     }
-  } else {
-    //set the clicked spot to O
-    spots[num].innerHTML = 'O';
-    //else pass to odd function
-    playerO(num);
-    //increse count
-    turnNumber++;
-  }
   if (turnNumber > 8) {
     //if yes alert
-    document.getElementById("title").innerHTML = "Tie Game";
-    //then reload the page for next game
-  setTimeout(() => window.location.reload(true), 3000);
+    document.getElementById('title').innerHTML = 'Tie Game';
   }
 }
-//alerts who won the game
-const winner = who => {
-  document.getElementById('title').innerHTML = `Player ${who} won the game!!!`
-  //and refresh the page
-  setTimeout(() => window.location.reload(true), 3000)
-}
-//one click
+
+      const winner = who => {
+        document.getElementById('title').innerHTML = `Player ${who} won the game!!!`
+        counter = -100;
+      }
 
 spots[0].addEventListener('click', () => boardClick(0));
 //two click
@@ -79,22 +68,22 @@ spots[7].addEventListener('click', () => boardClick(7));
 spots[8].addEventListener('click', () => boardClick(8));
 
 //function to handle the first players clicks always X
-const playerX = num => {
+const player = (num, piece) => {
   //check if the num is less than 3
   if(num < 3) {
   //if yes index top row of board
-    gameBoard[0][num] = 'X'
+    gameBoard[0][num] = piece
   //else check if it is the middle array of our board 
   } else if (num < 6 && num > 2) {
     //if yes then fix num for proper indexing
     num = num - 3;
     //if yes index middle row of gameBoard
-    gameBoard[1][num] = 'X';
+    gameBoard[1][num] = piece;
   } else {
     //adjust for bottom array
     num = num - 6;
     //if yes index bottom row of gameBoard
-    gameBoard[2][num] = 'X';
+    gameBoard[2][num] = piece;
   }
   //row check for winner
   gameBoard.forEach(line => {
@@ -107,102 +96,37 @@ const playerX = num => {
     //counter for right col
     let endTotal = 0;
     //check diagonal top left to bottom right
-    if(gameBoard[0][0] === 'X' && gameBoard[1][1] === 'X' && gameBoard[2][2] === 'X') {
-      counter = 3;
+    if(gameBoard[0][0] === piece && gameBoard[1][1] === piece && gameBoard[2][2] === piece) {
+      winner(piece);
     }
     //check diagonal top right to bottom left
-    if(gameBoard[0][2] === 'X' && gameBoard[1][1] === 'X' && gameBoard[2][0] === 'X') {
-      counter = 3;
+    if(gameBoard[0][2] === piece && gameBoard[1][1] === piece && gameBoard[2][0] === piece) {
+      winner(piece);
     }
     //checks rows
-    line.forEach(piece => {
-      if (piece === 'X') {
+    line.forEach(play => {
+      if (play === piece) {
         counter++;
       }
     });
   gameBoard.forEach(col => {
     //checks the left col
-    if(col[0] === 'X') {
+    if(col[0] === piece) {
       total += 1
     }
     //checks the middle col
-    if(col[1] === 'X') {
+    if(col[1] === piece) {
       middleTotal += 1
     }
     //checks the right col
-    if(col[2] === 'X') {
+    if(col[2] === piece) {
       endTotal += 1
     }
   })
     //if a win is found
     if (counter > 2 || total > 2 || middleTotal > 2 || endTotal > 2) {
-      winner('X');
+      winner(piece);
       return;
     }
   });
 }
-
-//function to handle the second players clicks always O
-const playerO = num => {
-  //check if the num is less than 3
-  if(num < 3) {
-  //if yes index top row of board
-    gameBoard[0][num] = 'O'
-  //else check if it is the middle array of our board 
-  } else if (num < 6 && num > 2) {
-    //if yes then fix num for proper indexing
-    num = num - 3;
-    //if yes index middle row of gameBoard
-    gameBoard[1][num] = 'O';
-  } else {
-    //adjust for bottom array
-    num = num - 6;
-    //if yes index bottom row of gameBoard
-    gameBoard[2][num] = 'O';
-  }
-  //check for row wins
-    gameBoard.forEach(line => {
-    //row counter
-    let counter = 0;
-    //left col counter
-    let total = 0;
-    //middle col counter
-    let middleTotal = 0;
-    //right col counter
-    let endTotal = 0;
-    //check diagonal top left to bottom right
-    if(gameBoard[0][0] === 'O' && gameBoard[1][1] === 'O' && gameBoard[2][2] === 'O') {
-      counter = 3;
-    }
-    //check diagonal top right to bottom left
-    if(gameBoard[0][2] === 'O' && gameBoard[1][1] === 'O' && gameBoard[2][0] === 'O') {
-      counter = 3;
-    }
-    //checks each row
-    line.forEach(piece => {
-      if (piece === 'O') {
-        counter++;
-      }
-    });
-    gameBoard.forEach(col => {
-      //checks left col
-      if (col[0] === 'O') {
-        total += 1;
-      }
-      //checks middle col
-      if (col[1] === 'O') {
-        middleTotal += 1;
-      }
-      //checks right col
-      if (col[2] === 'O') {
-        endTotal += 1;
-      }
-    });
-    //if a win is found
-    if (counter > 2 || total > 2 || middleTotal > 2 || endTotal > 2) {
-      winner('O');
-      return;
-    }
-  });
-}
-
